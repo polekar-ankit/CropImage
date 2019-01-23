@@ -74,16 +74,24 @@ public class MainActivity extends AppCompatActivity {
                 cropImageView.getCroppedImageAsync();
             }
         });
+        findViewById(R.id.btn_crop_reset).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (cropImageView.isUriProvided())
+                    cropImageView.setImageUriAsync((Uri) cropImageView.getOriginalImage());
+                else cropImageView.setImageBitmap((Bitmap) cropImageView.getOriginalImage());
+            }
+        });
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode,  Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         cameraPicker.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,  String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         cameraPicker.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
