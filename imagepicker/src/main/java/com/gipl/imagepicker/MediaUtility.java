@@ -1,8 +1,6 @@
-package com.gipl.imagecroping;
+package com.gipl.imagepicker;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
@@ -22,27 +20,6 @@ public class MediaUtility {
     public static final int PROFILE_PHOTO = 122;
     public static final int STORAGE_PERMISSION_REQUEST = 124;
 
-    public static void openAudioFile(Activity activity, String sFilePath) {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.parse(sFilePath), MediaType.VIDEO);
-        activity.startActivityForResult(intent, 0);
-    }
-
-    public static void openVideoFile(Activity activity, String sFilePath) {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.parse(sFilePath), MediaType.VIDEO);
-        activity.startActivityForResult(intent, 0);
-    }
-
-    public static void recordVideo(Activity activity) {
-        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        if (intent.resolveActivity(activity.getPackageManager()) != null) {
-            activity.startActivityForResult(intent, REQUEST_VIDEO_CAPTURE);
-
-        }
-    }
 
 
     public static String getFilePathFromUri(Context context, Uri uri) {

@@ -1,4 +1,4 @@
-package com.gipl.imagecroping;
+package com.gipl.imagepicker;
 
 import android.Manifest;
 import android.app.Activity;
@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
-import static com.gipl.imagecroping.MediaUtility.PROFILE_PHOTO;
+import static com.gipl.imagepicker.MediaUtility.PROFILE_PHOTO;
 
 /**
  * Creted by User on 17-Jan-19
@@ -38,21 +38,21 @@ public class ImagePicker {
     private IImagePickerResult iImagePickerResult;
     private String sImgPath = "";
 
-    ImagePicker(Context activity) {
+    public ImagePicker(Context activity) {
         this.activity = activity;
     }
 
-    ImagePicker setStoreInMyPath(boolean fStoreInMyPath) {
+    public ImagePicker setStoreInMyPath(boolean fStoreInMyPath) {
         this.fStoreInMyPath = fStoreInMyPath;
         return this;
     }
 
-    ImagePicker setDIRECTORY(String DIRECTORY) {
+    public ImagePicker setDIRECTORY(String DIRECTORY) {
         this.DIRECTORY = DIRECTORY;
         return this;
     }
 
-    ImagePicker setIMAGE_PATH(String IMAGE_PATH) {
+    public ImagePicker setIMAGE_PATH(String IMAGE_PATH) {
         this.IMAGE_PATH = IMAGE_PATH;
         return this;
     }
@@ -63,7 +63,7 @@ public class ImagePicker {
      *
      * @return String :  return complete image path if image path data is provided
      */
-    void openCamera() {
+    public void openCamera() {
         try {
             if ((ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA)
                     == PackageManager.PERMISSION_GRANTED)
@@ -91,7 +91,7 @@ public class ImagePicker {
                     Uri photoURI;
                     if (Build.VERSION.SDK_INT >= 24) {
                         photoURI = FileProvider.getUriForFile(activity,
-                                BuildConfig.APPLICATION_ID + ".provider",
+                                activity.getPackageName() + ".provider",
                                 photoFile);
                     } else {
                         photoURI = Uri.fromFile(photoFile);
@@ -107,13 +107,13 @@ public class ImagePicker {
         }
     }
 
-    void startGallary() {
+    public void startGallary() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
-        if (fragment != null) {
-            fragment.startActivityForResult(intent, PROFILE_PHOTO);
-            return;
-        }
+//        if (fragment != null) {
+//            fragment.startActivityForResult(intent, PROFILE_PHOTO);
+//            return;
+//        }
         ((AppCompatActivity) activity).startActivityForResult(intent, PROFILE_PHOTO);
     }
 
@@ -121,7 +121,7 @@ public class ImagePicker {
         return !DIRECTORY.isEmpty() && !IMAGE_PATH.isEmpty();
     }
 
-    void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         try {
             if (resultCode == RESULT_OK) {
                 if (requestCode == CAMERA_REQUEST) {
@@ -150,7 +150,7 @@ public class ImagePicker {
 
     }
 
-    void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == CAMERA_PERMISSION_REQUEST) {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED
@@ -175,25 +175,25 @@ public class ImagePicker {
     }
 
     private void openCamera(Intent takePictureIntent) {
-        if (fragment != null)
-            fragment.startActivityForResult(takePictureIntent, CAMERA_REQUEST);
-        else
+//        if (fragment != null) {
+//            fragment.startActivityForResult(takePictureIntent, CAMERA_REQUEST);
+//        }
+//        else
             ((Activity) activity).startActivityForResult(takePictureIntent, CAMERA_REQUEST);
     }
 
     private void startPermissonRequest() {
-        if (fragment != null) {
-            fragment.requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    CAMERA_PERMISSION_REQUEST);
-            return;
-        }
+//        if (fragment != null) {
+//            fragment.requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//                    CAMERA_PERMISSION_REQUEST);
+//            return;
+//        }
         ActivityCompat.requestPermissions((Activity) activity, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 CAMERA_PERMISSION_REQUEST);
     }
 
-    ImagePicker setiImagePickerResult(IImagePickerResult iImagePickerResult) {
+    void setiImagePickerResult(IImagePickerResult iImagePickerResult) {
         this.iImagePickerResult = iImagePickerResult;
-        return this;
     }
 
     public interface IImagePickerResult {
@@ -204,7 +204,7 @@ public class ImagePicker {
     }
 
     public class CameraErrors extends Exception {
-        static final int PERMISSION_ERROR = 1231;
+        public static final int PERMISSION_ERROR = 1231;
         static final int DIR_ERROR = 1232;
         static final int IMAGE_ERROR = 1233;
         private int nErrorType;
@@ -213,7 +213,7 @@ public class ImagePicker {
             super(message);
         }
 
-        public CameraErrors(String message, int nErrorType) {
+        CameraErrors(String message, int nErrorType) {
             super(message);
             this.nErrorType = nErrorType;
         }
