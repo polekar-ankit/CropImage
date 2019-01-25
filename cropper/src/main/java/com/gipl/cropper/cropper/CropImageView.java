@@ -370,6 +370,8 @@ public class CropImageView extends FrameLayout {
                         }
                     }
                 });
+
+
         mCropOverlayView.setInitialAttributeValues(options);
 
         mProgressBar = v.findViewById(R.id.CropProgressBar);

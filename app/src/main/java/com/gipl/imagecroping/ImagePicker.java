@@ -26,7 +26,7 @@ import static com.gipl.imagecroping.MediaUtility.PROFILE_PHOTO;
 /**
  * Creted by User on 17-Jan-19
  */
-public class CameraPicker {
+public class ImagePicker {
 
     private static final int CAMERA_REQUEST = 12;
     private static final int CAMERA_PERMISSION_REQUEST = 123;
@@ -38,21 +38,21 @@ public class CameraPicker {
     private IImagePickerResult iImagePickerResult;
     private String sImgPath = "";
 
-    CameraPicker(Context activity) {
+    ImagePicker(Context activity) {
         this.activity = activity;
     }
 
-    CameraPicker setStoreInMyPath(boolean fStoreInMyPath) {
+    ImagePicker setStoreInMyPath(boolean fStoreInMyPath) {
         this.fStoreInMyPath = fStoreInMyPath;
         return this;
     }
 
-    CameraPicker setDIRECTORY(String DIRECTORY) {
+    ImagePicker setDIRECTORY(String DIRECTORY) {
         this.DIRECTORY = DIRECTORY;
         return this;
     }
 
-    CameraPicker setIMAGE_PATH(String IMAGE_PATH) {
+    ImagePicker setIMAGE_PATH(String IMAGE_PATH) {
         this.IMAGE_PATH = IMAGE_PATH;
         return this;
     }
@@ -65,39 +65,45 @@ public class CameraPicker {
      */
     void openCamera() {
         try {
-
             if ((ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA)
-                    == PackageManager.PERMISSION_GRANTED)) {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
-                    if (fStoreInMyPath) {
-                        if (isDirAndPathProvided()) {
-                            File photoFile;
-                            photoFile = MediaUtility.FILE.createImageFile(DIRECTORY, IMAGE_PATH);
-                            sImgPath = photoFile.getAbsolutePath();
-                            Uri photoURI;
-                            if (Build.VERSION.SDK_INT >= 24) {
-                                photoURI = FileProvider.getUriForFile(activity,
-                                        BuildConfig.APPLICATION_ID + ".provider",
-                                        photoFile);
-                            } else {
-                                photoURI = Uri.fromFile(photoFile);
-                            }
-                            // Continue only if the File was successfully created
-                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                        } else {
-                            iImagePickerResult.onError("Please provide Image Directory and Image path");
-                        }
-                    }
-                    openCamera(takePictureIntent);
-
-                }
+                    == PackageManager.PERMISSION_GRANTED)
+                    &&
+                    ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        startCameraIntent();
             } else {
                 startPermissonRequest();
             }
 
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    private void startCameraIntent() throws IOException {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
+            if (fStoreInMyPath) {
+                if (isDirAndPathProvided()) {
+                    File photoFile;
+                    photoFile = MediaUtility.FILE.createImageFile(DIRECTORY, IMAGE_PATH);
+                    sImgPath = photoFile.getAbsolutePath();
+                    Uri photoURI;
+                    if (Build.VERSION.SDK_INT >= 24) {
+                        photoURI = FileProvider.getUriForFile(activity,
+                                BuildConfig.APPLICATION_ID + ".provider",
+                                photoFile);
+                    } else {
+                        photoURI = Uri.fromFile(photoFile);
+                    }
+                    // Continue only if the File was successfully created
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                } else {
+                    iImagePickerResult.onError(new CameraErrors("Please provide Image Directory and Image path", CameraErrors.DIR_ERROR));
+                }
+            }
+            openCamera(takePictureIntent);
+
         }
     }
 
@@ -108,9 +114,7 @@ public class CameraPicker {
             fragment.startActivityForResult(intent, PROFILE_PHOTO);
             return;
         }
-
         ((AppCompatActivity) activity).startActivityForResult(intent, PROFILE_PHOTO);
-
     }
 
     private boolean isDirAndPathProvided() {
@@ -137,7 +141,8 @@ public class CameraPicker {
                 }
 
             } else {
-                iImagePickerResult.onError("Unable get image try again");
+
+                iImagePickerResult.onError(new CameraErrors("Unable get image try again", CameraErrors.IMAGE_ERROR));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -146,7 +151,22 @@ public class CameraPicker {
     }
 
     void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        openCamera();
+        if (requestCode == CAMERA_PERMISSION_REQUEST) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                openCamera();
+            } else {
+                if (!ActivityCompat.shouldShowRequestPermissionRationale((Activity) activity, permissions[0])
+                        || !ActivityCompat.shouldShowRequestPermissionRationale((Activity) activity, permissions[1])) {
+                    iImagePickerResult.onError(new CameraErrors("Permission is disable by user", CameraErrors.PERMISSION_ERROR));
+
+                } else {
+                    openCamera();
+                }
+            }
+        }
+
     }
 
 
@@ -163,15 +183,15 @@ public class CameraPicker {
 
     private void startPermissonRequest() {
         if (fragment != null) {
-            fragment.requestPermissions(new String[]{Manifest.permission.CAMERA},
+            fragment.requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     CAMERA_PERMISSION_REQUEST);
             return;
         }
-        ActivityCompat.requestPermissions((Activity) activity, new String[]{Manifest.permission.CAMERA},
+        ActivityCompat.requestPermissions((Activity) activity, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 CAMERA_PERMISSION_REQUEST);
     }
 
-    CameraPicker setiImagePickerResult(IImagePickerResult iImagePickerResult) {
+    ImagePicker setiImagePickerResult(IImagePickerResult iImagePickerResult) {
         this.iImagePickerResult = iImagePickerResult;
         return this;
     }
@@ -179,6 +199,27 @@ public class CameraPicker {
     public interface IImagePickerResult {
         void onImageGet(String sPath, Bitmap bitmap);
 
-        void onError(String sErrorMessage);
+        void onError(CameraErrors cameraErrors);
+
+    }
+
+    public class CameraErrors extends Exception {
+        static final int PERMISSION_ERROR = 1231;
+        static final int DIR_ERROR = 1232;
+        static final int IMAGE_ERROR = 1233;
+        private int nErrorType;
+
+        public CameraErrors(String message) {
+            super(message);
+        }
+
+        public CameraErrors(String message, int nErrorType) {
+            super(message);
+            this.nErrorType = nErrorType;
+        }
+
+        public int getErrorType() {
+            return nErrorType;
+        }
     }
 }

@@ -60,40 +60,6 @@ public class MediaUtility {
     }
 
 
-//    /**
-//     * set image to image view with proper orientation
-//     *
-//     * @param imageView:image view to load image
-//     * @param imagePath:      local path of image
-//     */
-//    public static String setImage(final ImageView imageView, final String imagePath) {
-//        try {
-//            BitmapFactory.Options options = new BitmapFactory.Options();
-//            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-//
-//            Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
-//
-//            int nWidth = bitmap.getWidth();
-//            int nHeight = bitmap.getHeight();
-//
-//            int nNewWidth = nWidth / 2;
-//            int nNewHeight = nHeight / 2;
-//
-//            int fScaleWidth = (int) (((float) nNewWidth) / nWidth);
-//            int fScaleHeight = (int) (((float) nNewHeight) / nHeight);
-//
-//            RequestOptions requestOptions = new RequestOptions().override(fScaleWidth, fScaleHeight);
-//            Glide.with(AppUtility.getContext())
-//                    .load(imagePath)
-//                    .apply(requestOptions)
-//                    .into(imageView);
-//        } catch (Exception e) {
-//            //Error
-//            e.printStackTrace();
-//        }
-//        return imagePath;
-//    }
-
     public static class FILE {
 
         public static void deleteMediaFile(File mFile) {
@@ -103,10 +69,6 @@ public class MediaUtility {
         }
 
         static File createImageFile(String SECURE_DIR, String IMAGE_PATH) throws IOException {
-            // Create an image file name
-
-//            String sTimeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//            String sImageFileName = "JPEG_" + sTimeStamp + "_";
             String sImageFileName = "JPEG_" + UUID.randomUUID().toString() + "_";
             File storageDir = new File(Environment.getExternalStorageDirectory() + "/" + SECURE_DIR + "/" + IMAGE_PATH);
             if (!storageDir.exists()) {

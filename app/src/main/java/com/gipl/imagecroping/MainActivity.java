@@ -1,9 +1,12 @@
 package com.gipl.imagecroping;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
@@ -16,7 +19,7 @@ import java.io.File;
 public class MainActivity extends AppCompatActivity {
 
     private CropImageView cropImageView;
-    private CameraPicker cameraPicker;
+    private ImagePicker imagePicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,11 +27,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         cropImageView = findViewById(R.id.cropImageView);
 
-        cameraPicker = new CameraPicker(this)
+        imagePicker = new ImagePicker(this)
                 .setDIRECTORY("AppSample")
                 .setIMAGE_PATH("AppImages")
                 .setStoreInMyPath(true)
-                .setiImagePickerResult(new CameraPicker.IImagePickerResult() {
+                .setiImagePickerResult(new ImagePicker.IImagePickerResult() {
                     @Override
                     public void onImageGet(String sPath, Bitmap bitmap) {
                         if (!sPath.isEmpty()) {
@@ -41,9 +44,34 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onError(String sErrorMessage) {
-                        Toast.makeText(MainActivity.this, sErrorMessage, Toast.LENGTH_SHORT).show();
+                    public void onError(ImagePicker.CameraErrors cameraErrors) {
+                        if (cameraErrors.getErrorType()== ImagePicker.CameraErrors.PERMISSION_ERROR){
+                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+                            alertDialog.setTitle("Camera permission deny!");
+                            alertDialog.setMessage("Camera will be available after enabling Camera and Storage permission from setting");
+                            alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Intent intent = new Intent();
+                                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                    Uri uri = Uri.fromParts("package", getPackageName(), null);
+                                    intent.setData(uri);
+                                    startActivity(intent);
+                                }
+                            });
+                            alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            });
+
+                            alertDialog.show();
+                        }
+                        Toast.makeText(MainActivity.this, cameraErrors.getMessage(), Toast.LENGTH_SHORT).show();
                     }
+
+
                 });
 
         cropImageView.setOnCropImageCompleteListener(new CropImageView.OnCropImageCompleteListener() {
@@ -58,14 +86,14 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_open_camera).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cameraPicker.openCamera();
+                imagePicker.openCamera();
             }
         });
 
         findViewById(R.id.btn_open_gallary).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cameraPicker.startGallary();
+                imagePicker.startGallary();
             }
         });
         findViewById(R.id.btn_crop).setOnClickListener(new View.OnClickListener() {
@@ -87,12 +115,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        cameraPicker.onActivityResult(requestCode, resultCode, data);
+        imagePicker.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        cameraPicker.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        imagePicker.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }
