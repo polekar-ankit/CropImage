@@ -10,6 +10,7 @@ import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.gipl.cropper.cropper.CropImageView;
@@ -24,17 +25,23 @@ public class MainActivity extends AppCompatActivity implements ImagePicker.IImag
 
     private CropImageView cropImageView;
     private ImagePickerDialog imagePickerDialog;
+    private Button btnCrop,btnReset;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         cropImageView = findViewById(R.id.cropImageView);
-
+        btnCrop =  findViewById(R.id.btn_crop);
+        btnReset = findViewById(R.id.btn_crop_reset);
+        btnCrop.setEnabled(false);
+        btnReset.setEnabled(false);
 
         final PickerConfiguration pickerConfiguration = PickerConfiguration.build()
-                .setColorCode(Color.parseColor("#000000"))
+                .setTextIconColor(Color.parseColor("#000000"))
                 .setBackGroundColor(Color.parseColor("#ffffff"))
                 .setSetCustomDialog(true);
+
         cropImageView.setOnCropImageCompleteListener(new CropImageView.OnCropImageCompleteListener() {
             @Override
             public void onCropImageComplete(CropImageView view, CropImageView.CropResult result) {
@@ -51,18 +58,28 @@ public class MainActivity extends AppCompatActivity implements ImagePicker.IImag
                 imagePickerDialog = ImagePickerDialog.display(getSupportFragmentManager(), pickerConfiguration);
             }
         });
-        findViewById(R.id.btn_crop).setOnClickListener(new View.OnClickListener() {
+        btnCrop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cropImageView.getCroppedImageAsync();
             }
         });
-        findViewById(R.id.btn_crop_reset).setOnClickListener(new View.OnClickListener() {
+        btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (cropImageView.isUriProvided())
                     cropImageView.setImageUriAsync((Uri) cropImageView.getOriginalImage());
                 else cropImageView.setImageBitmap((Bitmap) cropImageView.getOriginalImage());
+            }
+        });
+        findViewById(R.id.btn_open_picker).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (imagePickerDialog != null && imagePickerDialog.isVisible())
+                    imagePickerDialog.dismiss();
+                imagePickerDialog = ImagePickerDialog.display(getSupportFragmentManager(), PickerConfiguration.build()
+                        .setSetCustomDialog(false));
             }
         });
     }
@@ -82,6 +99,8 @@ public class MainActivity extends AppCompatActivity implements ImagePicker.IImag
 
     @Override
     public void onImageGet(String sPath, Bitmap bitmap) {
+        btnCrop.setEnabled(true);
+        btnReset.setEnabled(true);
         if (!sPath.isEmpty()) {
             cropImageView.setImageUriAsync(Uri.fromFile(new File(sPath)));
             cropImageView.setScaleType(CropImageView.ScaleType.CENTER_INSIDE);

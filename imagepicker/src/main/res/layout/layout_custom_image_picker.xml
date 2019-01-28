@@ -28,7 +28,8 @@
             android:layout_marginLeft="10dp"
             android:layout_height="wrap_content"
             android:textColor="#000"
-            android:text="Open Camera" />
+            android:text="@string/open_camera"
+            android:layout_marginStart="10dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -52,18 +53,22 @@
             android:layout_marginLeft="10dp"
             android:layout_height="wrap_content"
             android:textColor="#000"
-            android:text="Open Gallery" />
+            android:text="@string/open_gallery"
+            android:layout_marginStart="10dp" />
     </LinearLayout>
 
 
         <TextView
             android:id="@+id/tv_cancel"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_marginLeft="10dp"
             android:layout_gravity="center_horizontal"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:textStyle="bold"
+            android:padding="3dp"
             android:textColor="#000"
-            android:text="Cancel" />
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:layout_marginStart="10dp" />
 </LinearLayout>

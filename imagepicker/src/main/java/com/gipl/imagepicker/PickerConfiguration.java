@@ -64,7 +64,7 @@ public class PickerConfiguration implements Parcelable {
         return colorCode;
     }
 
-    public PickerConfiguration setColorCode(int colorCode) {
+    public PickerConfiguration setTextIconColor(int colorCode) {
         this.colorCode = colorCode;
         return this;
     }

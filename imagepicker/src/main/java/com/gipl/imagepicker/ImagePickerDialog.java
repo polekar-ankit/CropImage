@@ -31,12 +31,12 @@ public class ImagePickerDialog extends DialogFragment {
 
     public static ImagePickerDialog display(FragmentManager fragmentManager,
                                PickerConfiguration pickerConfiguration) {
-        DialogFragment newFragment = new ImagePickerDialog();
+        ImagePickerDialog newFragment = new ImagePickerDialog();
         Bundle bundle = new Bundle();
         bundle.putParcelable("pickerConfig", pickerConfiguration);
         newFragment.setArguments(bundle);
         newFragment.show(fragmentManager, "");
-        return (ImagePickerDialog) newFragment;
+        return newFragment;
     }
 
 

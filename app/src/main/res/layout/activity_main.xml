@@ -10,23 +10,36 @@
         android:id="@+id/cropImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_layout" />
+        android:layout_above="@+id/bottom_layout_2" />
 
 
 
     <LinearLayout
-        android:id="@+id/bottom_layout"
+        android:id="@+id/bottom_layout_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_alignParentBottom="true">
+        android:layout_above="@+id/bottom_layout_1"
+        >
+        <Button
+            android:id="@+id/btn_open_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Open Picker 1" />
         <Button
             android:id="@+id/btn_open_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_above="@+id/bottom_layout"
-            android:text="Open Picker" />
+            android:text="Open Picker 2" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/bottom_layout_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_alignParentBottom="true">
         <Button
             android:id="@+id/btn_crop"
             android:layout_width="wrap_content"
@@ -38,7 +51,7 @@
             android:id="@+id/btn_crop_reset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reset to Original" />
+            android:text="Reset" />
     </LinearLayout>
 
 </RelativeLayout>
