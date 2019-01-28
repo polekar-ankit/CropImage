@@ -38,7 +38,8 @@ public class MainActivity extends AppCompatActivity implements ImagePicker.IImag
         btnReset.setEnabled(false);
 
         final PickerConfiguration pickerConfiguration = PickerConfiguration.build()
-                .setTextIconColor(Color.parseColor("#000000"))
+                .setTextColor(Color.parseColor("#000000"))
+                .setIconColor(Color.parseColor("#000000"))
                 .setBackGroundColor(Color.parseColor("#ffffff"))
                 .setSetCustomDialog(true);
 

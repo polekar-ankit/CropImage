@@ -104,13 +104,13 @@ public class ImagePickerDialog extends DialogFragment {
 
     private void setViewConfig(View view) {
 
-        DrawableCompat.setTint(((ImageView) view.findViewById(R.id.iv_camera)).getDrawable(), pickerConfiguration.getColorCode());
-        ((TextView) view.findViewById(R.id.tv_camera)).setTextColor(pickerConfiguration.getColorCode());
+        DrawableCompat.setTint(((ImageView) view.findViewById(R.id.iv_camera)).getDrawable(), pickerConfiguration.getIconColor());
+        ((TextView) view.findViewById(R.id.tv_camera)).setTextColor(pickerConfiguration.getTextColor());
 
-        DrawableCompat.setTint(((ImageView) view.findViewById(R.id.iv_galray)).getDrawable(), pickerConfiguration.getColorCode());
-        ((TextView) view.findViewById(R.id.tv_gallery)).setTextColor(pickerConfiguration.getColorCode());
+        DrawableCompat.setTint(((ImageView) view.findViewById(R.id.iv_galray)).getDrawable(), pickerConfiguration.getIconColor());
+        ((TextView) view.findViewById(R.id.tv_gallery)).setTextColor(pickerConfiguration.getTextColor());
 
-        ((TextView) view.findViewById(R.id.tv_cancel)).setTextColor(pickerConfiguration.getColorCode());
+        ((TextView) view.findViewById(R.id.tv_cancel)).setTextColor(pickerConfiguration.getTextColor());
 
         view.setBackgroundColor(pickerConfiguration.getBackGroundColor());
     }

@@ -20,12 +20,13 @@ public class PickerConfiguration implements Parcelable {
         }
     };
     private boolean fIsSetCustomDialog;
-    private int colorCode;
+    private int colorCodeText;
+    private int colorCodeIcon;
     private boolean fIsDialogCancelable;
     private int nBackGroundColor;
 
     public PickerConfiguration() {
-        colorCode = Color.BLACK;
+        colorCodeText = Color.BLACK;
         nBackGroundColor = Color.WHITE;
         fIsSetCustomDialog = false;
         fIsDialogCancelable = true;
@@ -33,9 +34,10 @@ public class PickerConfiguration implements Parcelable {
 
     protected PickerConfiguration(Parcel in) {
         fIsSetCustomDialog = in.readByte() != 0;
-        colorCode = in.readInt();
+        colorCodeText = in.readInt();
         fIsDialogCancelable = in.readByte() != 0;
         nBackGroundColor = in.readInt();
+        colorCodeIcon = in.readInt();
     }
 
     public static PickerConfiguration build() {
@@ -60,12 +62,12 @@ public class PickerConfiguration implements Parcelable {
         return this;
     }
 
-    int getColorCode() {
-        return colorCode;
+    int getTextColor() {
+        return colorCodeText;
     }
 
-    public PickerConfiguration setTextIconColor(int colorCode) {
-        this.colorCode = colorCode;
+    public PickerConfiguration setTextColor(int colorCode) {
+        this.colorCodeText = colorCode;
         return this;
     }
 
@@ -86,8 +88,18 @@ public class PickerConfiguration implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeByte((byte) (fIsSetCustomDialog ? 1 : 0));
-        parcel.writeInt(colorCode);
+        parcel.writeInt(colorCodeText);
         parcel.writeByte((byte) (fIsDialogCancelable ? 1 : 0));
         parcel.writeInt(nBackGroundColor);
+        parcel.writeInt(colorCodeIcon);
+    }
+
+    public int getIconColor() {
+        return colorCodeIcon;
+    }
+
+    public PickerConfiguration setIconColor(int colorCodeIcon) {
+        this.colorCodeIcon = colorCodeIcon;
+        return this;
     }
 }
