@@ -24,12 +24,26 @@ public class PickerConfiguration implements Parcelable {
     private int colorCodeIcon;
     private boolean fIsDialogCancelable;
     private int nBackGroundColor;
+    private int cameraImageId;
+    private int galleryImageId;
+
+    public String getsGalleryTitle() {
+        return sGalleryTitle;
+    }
+
+    private String sCameraTitle;
+    private String sGalleryTitle;
 
     public PickerConfiguration() {
         colorCodeText = Color.BLACK;
         nBackGroundColor = Color.WHITE;
         fIsSetCustomDialog = false;
         fIsDialogCancelable = true;
+        cameraImageId = -1;
+        galleryImageId = -1;
+        sCameraTitle ="";
+        sGalleryTitle ="";
+
     }
 
     protected PickerConfiguration(Parcel in) {
@@ -38,6 +52,10 @@ public class PickerConfiguration implements Parcelable {
         fIsDialogCancelable = in.readByte() != 0;
         nBackGroundColor = in.readInt();
         colorCodeIcon = in.readInt();
+        cameraImageId = in.readInt();
+        galleryImageId = in.readInt();
+        sCameraTitle = in.readString();
+        sGalleryTitle = in.readString();
     }
 
     public static PickerConfiguration build() {
@@ -92,6 +110,10 @@ public class PickerConfiguration implements Parcelable {
         parcel.writeByte((byte) (fIsDialogCancelable ? 1 : 0));
         parcel.writeInt(nBackGroundColor);
         parcel.writeInt(colorCodeIcon);
+        parcel.writeInt(cameraImageId);
+        parcel.writeInt(galleryImageId);
+        parcel.writeString(sCameraTitle);
+        parcel.writeString(sGalleryTitle);
     }
 
     public int getIconColor() {
@@ -100,6 +122,42 @@ public class PickerConfiguration implements Parcelable {
 
     public PickerConfiguration setIconColor(int colorCodeIcon) {
         this.colorCodeIcon = colorCodeIcon;
+        return this;
+    }
+
+    public int getCameraImageId() {
+        return cameraImageId;
+    }
+
+    public PickerConfiguration setCameraImageId(int cameraImageId) {
+        this.cameraImageId = cameraImageId;
+        return this;
+    }
+
+    public int getGalleryImageId() {
+        return galleryImageId;
+    }
+
+    public PickerConfiguration setGalleryImageId(int galleryImageId) {
+        this.galleryImageId = galleryImageId;
+        return this;
+    }
+
+    public String getCameraTitle() {
+        return sCameraTitle;
+    }
+
+    public PickerConfiguration setCameraTitle(String sCameraTitle) {
+        this.sCameraTitle = sCameraTitle;
+        return this;
+    }
+
+    public String getGalleryTitle() {
+        return sGalleryTitle;
+    }
+
+    public PickerConfiguration setGalleryTitle(String sGalleryTitle) {
+        this.sGalleryTitle = sGalleryTitle;
         return this;
     }
 }

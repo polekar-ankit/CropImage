@@ -30,7 +30,7 @@ public class ImagePickerDialog extends DialogFragment {
     private PickerConfiguration pickerConfiguration;
 
     public static ImagePickerDialog display(FragmentManager fragmentManager,
-                               PickerConfiguration pickerConfiguration) {
+                                            PickerConfiguration pickerConfiguration) {
         ImagePickerDialog newFragment = new ImagePickerDialog();
         Bundle bundle = new Bundle();
         bundle.putParcelable("pickerConfig", pickerConfiguration);
@@ -103,13 +103,28 @@ public class ImagePickerDialog extends DialogFragment {
     }
 
     private void setViewConfig(View view) {
+        ImageView ivCamera = view.findViewById(R.id.iv_camera);
+        ImageView ivGallery = view.findViewById(R.id.iv_galray);
+        TextView tvGallery = view.findViewById(R.id.tv_gallery);
+        TextView tvCamera = view.findViewById(R.id.tv_camera);
 
-        DrawableCompat.setTint(((ImageView) view.findViewById(R.id.iv_camera)).getDrawable(), pickerConfiguration.getIconColor());
-        ((TextView) view.findViewById(R.id.tv_camera)).setTextColor(pickerConfiguration.getTextColor());
+        if (pickerConfiguration.getCameraImageId() != -1) {
+            ivCamera.setImageResource(pickerConfiguration.getCameraImageId());
+        } else
+            DrawableCompat.setTint(ivCamera.getDrawable(), pickerConfiguration.getIconColor());
 
-        DrawableCompat.setTint(((ImageView) view.findViewById(R.id.iv_galray)).getDrawable(), pickerConfiguration.getIconColor());
-        ((TextView) view.findViewById(R.id.tv_gallery)).setTextColor(pickerConfiguration.getTextColor());
+        if (pickerConfiguration.getGalleryImageId() != -1)
+            ivGallery.setImageResource(pickerConfiguration.getGalleryImageId());
+        else
+            DrawableCompat.setTint(ivGallery.getDrawable(), pickerConfiguration.getIconColor());
 
+        if (!pickerConfiguration.getGalleryTitle().isEmpty())
+            tvGallery.setText(pickerConfiguration.getGalleryTitle());
+        if (!pickerConfiguration.getCameraTitle().isEmpty())
+            tvCamera.setText(pickerConfiguration.getCameraTitle());
+
+        tvGallery.setTextColor(pickerConfiguration.getTextColor());
+        tvCamera.setTextColor(pickerConfiguration.getTextColor());
         ((TextView) view.findViewById(R.id.tv_cancel)).setTextColor(pickerConfiguration.getTextColor());
 
         view.setBackgroundColor(pickerConfiguration.getBackGroundColor());

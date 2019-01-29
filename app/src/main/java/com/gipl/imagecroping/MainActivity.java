@@ -25,16 +25,17 @@ public class MainActivity extends AppCompatActivity implements ImagePicker.IImag
 
     private CropImageView cropImageView;
     private ImagePickerDialog imagePickerDialog;
-    private Button btnCrop,btnReset;
+    private Button btnCrop, btnReset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         cropImageView = findViewById(R.id.cropImageView);
-        btnCrop =  findViewById(R.id.btn_crop);
+        btnCrop = findViewById(R.id.btn_crop);
         btnReset = findViewById(R.id.btn_crop_reset);
         btnCrop.setEnabled(false);
+
         btnReset.setEnabled(false);
 
         final PickerConfiguration pickerConfiguration = PickerConfiguration.build()
