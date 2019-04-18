@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -195,6 +196,13 @@ public class ImagePicker {
     void setiImagePickerResult(IImagePickerResult iImagePickerResult) {
         this.iImagePickerResult = iImagePickerResult;
     }
+
+
+
+    protected interface IPickerDialogListener extends Parcelable {
+        void onCancelClick();
+    }
+
 
     public interface IImagePickerResult {
         void onImageGet(String sPath, Bitmap bitmap);

@@ -17,6 +17,7 @@ import com.gipl.cropper.cropper.CropImageView;
 import com.gipl.imagepicker.ImagePicker;
 import com.gipl.imagepicker.ImagePickerDialog;
 import com.gipl.imagepicker.PickerConfiguration;
+import com.gipl.imagepicker.PickerListener;
 
 import java.io.File;
 
@@ -42,6 +43,13 @@ public class MainActivity extends AppCompatActivity implements ImagePicker.IImag
                 .setTextColor(Color.parseColor("#000000"))
                 .setIconColor(Color.parseColor("#000000"))
                 .setBackGroundColor(Color.parseColor("#ffffff"))
+                .setPickerDialogListener(new PickerListener() {
+                    @Override
+                    public void onCancelClick() {
+                        super.onCancelClick();
+                        Toast.makeText(MainActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
+                    }
+                })
                 .setSetCustomDialog(true);
 
         cropImageView.setOnCropImageCompleteListener(new CropImageView.OnCropImageCompleteListener() {
@@ -77,10 +85,16 @@ public class MainActivity extends AppCompatActivity implements ImagePicker.IImag
         findViewById(R.id.btn_open_picker).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (imagePickerDialog != null && imagePickerDialog.isVisible())
                     imagePickerDialog.dismiss();
                 imagePickerDialog = ImagePickerDialog.display(getSupportFragmentManager(), PickerConfiguration.build()
+                        .setPickerDialogListener(new PickerListener() {
+                            @Override
+                            public void onCancelClick() {
+                                super.onCancelClick();
+                                Toast.makeText(MainActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
+                            }
+                        })
                         .setSetCustomDialog(false));
             }
         });

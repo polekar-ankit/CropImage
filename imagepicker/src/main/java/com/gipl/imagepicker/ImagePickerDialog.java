@@ -25,8 +25,7 @@ public class ImagePickerDialog extends DialogFragment {
     private Context context;
     private ImagePicker imagePicker;
     private ImagePicker.IImagePickerResult iImagePickerResult;
-    private LinearLayout llOpenCamera, llOpenGallery;
-    private TextView tvCancel;
+    private ImagePicker.IPickerDialogListener pickerDialogListener;
     private PickerConfiguration pickerConfiguration;
 
     public static ImagePickerDialog display(FragmentManager fragmentManager,
@@ -73,8 +72,10 @@ public class ImagePickerDialog extends DialogFragment {
 
         imagePicker.setiImagePickerResult(iImagePickerResult);
 
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = ((AppCompatActivity) context).getLayoutInflater();
+        pickerDialogListener = pickerConfiguration.getPickerDialogListener();
         if (pickerConfiguration.isIsSetCustomDialog()) {
             View view = inflater.inflate(R.layout.layout_custom_image_picker, null);
             builder.setView(view);
@@ -82,22 +83,25 @@ public class ImagePickerDialog extends DialogFragment {
             setViewConfig(view);
         } else
             builder.setTitle("Image Picker")
-                    .setItems(R.array.dialog_menus_image_picker, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int position) {
-                            switch (position) {
-                                case 0:
-                                    imagePicker.openCamera();
-                                    break;
-                                case 1:
-                                    imagePicker.startGallary();
-                                    break;
-                                case 2:
-                                    dismiss();
-                                    break;
-                            }
-                        }
-                    });
+                    .setItems(R.array.dialog_menus_image_picker,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int position) {
+                                    switch (position) {
+                                        case 0:
+                                            imagePicker.openCamera();
+                                            break;
+                                        case 1:
+                                            imagePicker.startGallary();
+                                            break;
+                                        case 2:
+                                            dismiss();
+                                            if (pickerDialogListener != null)
+                                                pickerDialogListener.onCancelClick();
+                                            break;
+                                    }
+                                }
+                            });
         builder.setCancelable(pickerConfiguration.isfIsDialogCancelable());
         return builder.create();
     }
@@ -130,10 +134,11 @@ public class ImagePickerDialog extends DialogFragment {
         view.setBackgroundColor(pickerConfiguration.getBackGroundColor());
     }
 
+
     private void setCustomView(View view) {
-        llOpenCamera = view.findViewById(R.id.ll_camera);
-        llOpenGallery = view.findViewById(R.id.ll_gallery);
-        tvCancel = view.findViewById(R.id.tv_cancel);
+        LinearLayout llOpenCamera = view.findViewById(R.id.ll_camera);
+        LinearLayout llOpenGallery = view.findViewById(R.id.ll_gallery);
+        TextView tvCancel = view.findViewById(R.id.tv_cancel);
 
         llOpenGallery.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,6 +157,8 @@ public class ImagePickerDialog extends DialogFragment {
         tvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (pickerDialogListener != null)
+                    pickerDialogListener.onCancelClick();
                 dismiss();
             }
         });

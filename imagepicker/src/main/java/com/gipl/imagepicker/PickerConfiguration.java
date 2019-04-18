@@ -8,6 +8,50 @@ import android.os.Parcelable;
  * Creted by User on 25-Jan-19
  */
 public class PickerConfiguration implements Parcelable {
+
+    private boolean fIsSetCustomDialog;
+    private int colorCodeText;
+    private int colorCodeIcon;
+    private boolean fIsDialogCancelable;
+    private int nBackGroundColor;
+    private int cameraImageId;
+    private int galleryImageId;
+
+    public ImagePicker.IPickerDialogListener getPickerDialogListener() {
+        return pickerDialogListener;
+    }
+
+    private ImagePicker.IPickerDialogListener pickerDialogListener;
+    private String sCameraTitle;
+    private String sGalleryTitle;
+
+
+    private PickerConfiguration() {
+        colorCodeText = Color.BLACK;
+        nBackGroundColor = Color.WHITE;
+        fIsSetCustomDialog = false;
+        fIsDialogCancelable = true;
+        cameraImageId = -1;
+        galleryImageId = -1;
+        sCameraTitle = "";
+        sGalleryTitle = "";
+
+    }
+
+
+    protected PickerConfiguration(Parcel in) {
+        fIsSetCustomDialog = in.readByte() != 0;
+        colorCodeText = in.readInt();
+        colorCodeIcon = in.readInt();
+        fIsDialogCancelable = in.readByte() != 0;
+        nBackGroundColor = in.readInt();
+        cameraImageId = in.readInt();
+        galleryImageId = in.readInt();
+        pickerDialogListener = in.readParcelable(ImagePicker.IPickerDialogListener.class.getClassLoader());
+        sCameraTitle = in.readString();
+        sGalleryTitle = in.readString();
+    }
+
     public static final Creator<PickerConfiguration> CREATOR = new Creator<PickerConfiguration>() {
         @Override
         public PickerConfiguration createFromParcel(Parcel in) {
@@ -19,47 +63,14 @@ public class PickerConfiguration implements Parcelable {
             return new PickerConfiguration[size];
         }
     };
-    private boolean fIsSetCustomDialog;
-    private int colorCodeText;
-    private int colorCodeIcon;
-    private boolean fIsDialogCancelable;
-    private int nBackGroundColor;
-    private int cameraImageId;
-    private int galleryImageId;
-
-    public String getsGalleryTitle() {
-        return sGalleryTitle;
-    }
-
-    private String sCameraTitle;
-    private String sGalleryTitle;
-
-    public PickerConfiguration() {
-        colorCodeText = Color.BLACK;
-        nBackGroundColor = Color.WHITE;
-        fIsSetCustomDialog = false;
-        fIsDialogCancelable = true;
-        cameraImageId = -1;
-        galleryImageId = -1;
-        sCameraTitle ="";
-        sGalleryTitle ="";
-
-    }
-
-    protected PickerConfiguration(Parcel in) {
-        fIsSetCustomDialog = in.readByte() != 0;
-        colorCodeText = in.readInt();
-        fIsDialogCancelable = in.readByte() != 0;
-        nBackGroundColor = in.readInt();
-        colorCodeIcon = in.readInt();
-        cameraImageId = in.readInt();
-        galleryImageId = in.readInt();
-        sCameraTitle = in.readString();
-        sGalleryTitle = in.readString();
-    }
 
     public static PickerConfiguration build() {
         return new PickerConfiguration();
+    }
+
+    public PickerConfiguration setPickerDialogListener(ImagePicker.IPickerDialogListener pickerDialogListener) {
+        this.pickerDialogListener = pickerDialogListener;
+        return this;
     }
 
     public int getBackGroundColor() {
@@ -98,23 +109,6 @@ public class PickerConfiguration implements Parcelable {
         return this;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeByte((byte) (fIsSetCustomDialog ? 1 : 0));
-        parcel.writeInt(colorCodeText);
-        parcel.writeByte((byte) (fIsDialogCancelable ? 1 : 0));
-        parcel.writeInt(nBackGroundColor);
-        parcel.writeInt(colorCodeIcon);
-        parcel.writeInt(cameraImageId);
-        parcel.writeInt(galleryImageId);
-        parcel.writeString(sCameraTitle);
-        parcel.writeString(sGalleryTitle);
-    }
 
     public int getIconColor() {
         return colorCodeIcon;
@@ -159,5 +153,25 @@ public class PickerConfiguration implements Parcelable {
     public PickerConfiguration setGalleryTitle(String sGalleryTitle) {
         this.sGalleryTitle = sGalleryTitle;
         return this;
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeByte((byte) (fIsSetCustomDialog ? 1 : 0));
+        parcel.writeInt(colorCodeText);
+        parcel.writeInt(colorCodeIcon);
+        parcel.writeByte((byte) (fIsDialogCancelable ? 1 : 0));
+        parcel.writeInt(nBackGroundColor);
+        parcel.writeInt(cameraImageId);
+        parcel.writeInt(galleryImageId);
+        parcel.writeParcelable(pickerDialogListener, i);
+        parcel.writeString(sCameraTitle);
+        parcel.writeString(sGalleryTitle);
     }
 }
