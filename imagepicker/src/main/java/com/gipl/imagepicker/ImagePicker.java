@@ -38,7 +38,7 @@ public class ImagePicker {
     private Fragment fragment;
     private IImagePickerResult iImagePickerResult;
     private String sImgPath = "";
-
+    private static final int STORAGE_ACCESS_PERMISSION_REQUEST = 1234;
     public ImagePicker(Context activity) {
         this.activity = activity;
     }
@@ -109,15 +109,21 @@ public class ImagePicker {
     }
 
     public void startGallary() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-//        if (fragment != null) {
-//            fragment.startActivityForResult(intent, PROFILE_PHOTO);
-//            return;
-//        }
-        ((AppCompatActivity) activity).startActivityForResult(intent, PROFILE_PHOTO);
+        if(ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED){
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            ((AppCompatActivity) activity).startActivityForResult(intent, PROFILE_PHOTO);
+        }else {
+            startWriteStorageAccessPersmissionRequest();
+        }
     }
 
+    private void startWriteStorageAccessPersmissionRequest(){
+
+        ActivityCompat.requestPermissions((Activity) activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                STORAGE_ACCESS_PERMISSION_REQUEST);
+    }
     private boolean isDirAndPathProvided() {
         return !DIRECTORY.isEmpty() && !IMAGE_PATH.isEmpty();
     }
@@ -165,6 +171,11 @@ public class ImagePicker {
                 } else {
                     openCamera();
                 }
+            }
+        }
+        else if (requestCode == STORAGE_ACCESS_PERMISSION_REQUEST){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                startGallary();
             }
         }
 
