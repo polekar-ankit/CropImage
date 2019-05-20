@@ -7,50 +7,8 @@ import android.os.Parcelable;
 /**
  * Creted by User on 25-Jan-19
  */
+
 public class PickerConfiguration implements Parcelable {
-
-    private boolean fIsSetCustomDialog;
-    private int colorCodeText;
-    private int colorCodeIcon;
-    private boolean fIsDialogCancelable;
-    private int nBackGroundColor;
-    private int cameraImageId;
-    private int galleryImageId;
-
-    public ImagePicker.IPickerDialogListener getPickerDialogListener() {
-        return pickerDialogListener;
-    }
-
-    private ImagePicker.IPickerDialogListener pickerDialogListener;
-    private String sCameraTitle;
-    private String sGalleryTitle;
-
-
-    private PickerConfiguration() {
-        colorCodeText = Color.BLACK;
-        nBackGroundColor = Color.WHITE;
-        fIsSetCustomDialog = false;
-        fIsDialogCancelable = true;
-        cameraImageId = -1;
-        galleryImageId = -1;
-        sCameraTitle = "";
-        sGalleryTitle = "";
-
-    }
-
-
-    protected PickerConfiguration(Parcel in) {
-        fIsSetCustomDialog = in.readByte() != 0;
-        colorCodeText = in.readInt();
-        colorCodeIcon = in.readInt();
-        fIsDialogCancelable = in.readByte() != 0;
-        nBackGroundColor = in.readInt();
-        cameraImageId = in.readInt();
-        galleryImageId = in.readInt();
-        pickerDialogListener = in.readParcelable(ImagePicker.IPickerDialogListener.class.getClassLoader());
-        sCameraTitle = in.readString();
-        sGalleryTitle = in.readString();
-    }
 
     public static final Creator<PickerConfiguration> CREATOR = new Creator<PickerConfiguration>() {
         @Override
@@ -63,9 +21,57 @@ public class PickerConfiguration implements Parcelable {
             return new PickerConfiguration[size];
         }
     };
+    private boolean fIsSetCustomDialog;
+    private int colorCodeText;
+    private int colorCodeIcon;
+    private boolean fIsDialogCancelable;
+    private int nBackGroundColor;
+    private int cameraImageId;
+    private int galleryImageId;
+    private ImagePicker.IPickerDialogListener pickerDialogListener;
+    private ImagePicker.IImagePickerResult imagePickerResult;
+    private String sCameraTitle;
+    private String sGalleryTitle;
+    private PickerConfiguration() {
+        colorCodeText = Color.BLACK;
+        nBackGroundColor = Color.WHITE;
+        fIsSetCustomDialog = false;
+        fIsDialogCancelable = true;
+        cameraImageId = -1;
+        galleryImageId = -1;
+        sCameraTitle = "";
+        sGalleryTitle = "";
+
+    }
+    protected PickerConfiguration(Parcel in) {
+        fIsSetCustomDialog = in.readByte() != 0;
+        colorCodeText = in.readInt();
+        colorCodeIcon = in.readInt();
+        fIsDialogCancelable = in.readByte() != 0;
+        nBackGroundColor = in.readInt();
+        cameraImageId = in.readInt();
+        galleryImageId = in.readInt();
+        pickerDialogListener = in.readParcelable(ImagePicker.IPickerDialogListener.class.getClassLoader());
+        sCameraTitle = in.readString();
+        sGalleryTitle = in.readString();
+        imagePickerResult = in.readParcelable(ImagePicker.IImagePickerResult.class.getClassLoader());
+    }
 
     public static PickerConfiguration build() {
         return new PickerConfiguration();
+    }
+
+    public ImagePicker.IImagePickerResult getImagePickerResult() {
+        return imagePickerResult;
+    }
+
+    public PickerConfiguration setImagePickerResult(ImagePicker.IImagePickerResult imagePickerResult) {
+        this.imagePickerResult = imagePickerResult;
+        return this;
+    }
+
+    public ImagePicker.IPickerDialogListener getPickerDialogListener() {
+        return pickerDialogListener;
     }
 
     public PickerConfiguration setPickerDialogListener(ImagePicker.IPickerDialogListener pickerDialogListener) {
@@ -173,5 +179,6 @@ public class PickerConfiguration implements Parcelable {
         parcel.writeParcelable(pickerDialogListener, i);
         parcel.writeString(sCameraTitle);
         parcel.writeString(sGalleryTitle);
+        parcel.writeParcelable(imagePickerResult,i);
     }
 }

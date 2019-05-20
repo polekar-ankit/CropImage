@@ -43,9 +43,6 @@ public class ImagePickerDialog extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
-        if (context instanceof ImagePicker.IImagePickerResult) {
-            iImagePickerResult = (ImagePicker.IImagePickerResult) context;
-        }
     }
 
     @Override
@@ -70,12 +67,14 @@ public class ImagePickerDialog extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         pickerConfiguration = getArguments().getParcelable("pickerConfig");
 
+        iImagePickerResult = pickerConfiguration.getImagePickerResult();
         imagePicker.setiImagePickerResult(iImagePickerResult);
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = ((AppCompatActivity) context).getLayoutInflater();
         pickerDialogListener = pickerConfiguration.getPickerDialogListener();
+
+
         if (pickerConfiguration.isIsSetCustomDialog()) {
             View view = inflater.inflate(R.layout.layout_custom_image_picker, null);
             builder.setView(view);

@@ -215,7 +215,7 @@ public class ImagePicker {
     }
 
 
-    public interface IImagePickerResult {
+    public interface IImagePickerResult extends Parcelable {
         void onImageGet(String sPath, Bitmap bitmap);
 
         void onError(CameraErrors cameraErrors);

@@ -18,11 +18,12 @@ import com.gipl.imagepicker.ImagePicker;
 import com.gipl.imagepicker.ImagePickerDialog;
 import com.gipl.imagepicker.PickerConfiguration;
 import com.gipl.imagepicker.PickerListener;
+import com.gipl.imagepicker.PickerResult;
 
 import java.io.File;
 
 
-public class MainActivity extends AppCompatActivity implements ImagePicker.IImagePickerResult {
+public class MainActivity extends AppCompatActivity {
 
     private CropImageView cropImageView;
     private ImagePickerDialog imagePickerDialog;
@@ -48,6 +49,20 @@ public class MainActivity extends AppCompatActivity implements ImagePicker.IImag
                     public void onCancelClick() {
                         super.onCancelClick();
                         Toast.makeText(MainActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setImagePickerResult(new PickerResult() {
+
+                    @Override
+                    public void onImageGet(String sPath, Bitmap bitmap) {
+                        super.onImageGet(sPath, bitmap);
+                        setImage(sPath, bitmap);
+                    }
+
+                    @Override
+                    public void onError(ImagePicker.CameraErrors cameraErrors) {
+                        super.onError(cameraErrors);
+                        setError(cameraErrors);
                     }
                 })
                 .setSetCustomDialog(true);
@@ -113,8 +128,7 @@ public class MainActivity extends AppCompatActivity implements ImagePicker.IImag
         imagePickerDialog.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    @Override
-    public void onImageGet(String sPath, Bitmap bitmap) {
+    public void setImage(String sPath, Bitmap bitmap) {
         btnCrop.setEnabled(true);
         btnReset.setEnabled(true);
         if (!sPath.isEmpty()) {
@@ -126,8 +140,7 @@ public class MainActivity extends AppCompatActivity implements ImagePicker.IImag
             cropImageView.setImageBitmap(bitmap);
     }
 
-    @Override
-    public void onError(ImagePicker.CameraErrors cameraErrors) {
+    public void setError(ImagePicker.CameraErrors cameraErrors) {
         if (cameraErrors.getErrorType() == ImagePicker.CameraErrors.PERMISSION_ERROR) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
             alertDialog.setTitle("Camera permission deny!");
