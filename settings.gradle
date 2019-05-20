@@ -1,1 +1,1 @@
-include ':app', ':cropper', ':imagepicker'
+include ':app', ':cropper', ':imagepicker-debug'

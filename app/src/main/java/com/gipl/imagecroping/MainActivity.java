@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_open_camera).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imagePickerDialog = ImagePickerDialog.display(getSupportFragmentManager(), pickerConfiguration);
+                imagePickerDialog = ImagePickerDialog.display(getSupportFragmentManager(), pickerConfiguration.setSetCustomDialog(true));
             }
         });
         btnCrop.setOnClickListener(new View.OnClickListener() {
@@ -102,14 +102,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (imagePickerDialog != null && imagePickerDialog.isVisible())
                     imagePickerDialog.dismiss();
-                imagePickerDialog = ImagePickerDialog.display(getSupportFragmentManager(), PickerConfiguration.build()
-                        .setPickerDialogListener(new PickerListener() {
-                            @Override
-                            public void onCancelClick() {
-                                super.onCancelClick();
-                                Toast.makeText(MainActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
-                            }
-                        })
+                imagePickerDialog = ImagePickerDialog.display(getSupportFragmentManager(), pickerConfiguration
                         .setSetCustomDialog(false));
             }
         });
